@@ -1,5 +1,8 @@
 {
   "name": "IonicSnippet___Camera2",
-  "app_id": "",
-  "type": "ionic-angular"
+  "app_id": "95280a43",
+  "type": "ionic-angular",
+  "integrations": {
+    "cordova": {}
+  }
 }

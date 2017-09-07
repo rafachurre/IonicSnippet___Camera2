@@ -7,8 +7,13 @@
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <img [src]="filePath" />
+  <ion-row>
+    <button ion-button (click)="takePicture()">Take a Picture</button>
+    <button ion-button (click)="uploadProfileImage()">Upload</button>
+  </ion-row>
+  <p>File URI : {{ filePath }}</p>
+  <p>File Name : {{ fileName }}</p>
+  <p>Success : {{ successText }}</p>
+  <p>Error : {{ errorText }}</p>
 </ion-content>
