@@ -6,6 +6,8 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Camera } from '@ionic-native/camera';
 import { FileTransfer } from '@ionic-native/file-transfer';
 import { File } from '@ionic-native/file';
+import { Transfer } from '@ionic-native/transfer';
+import { FilePath } from '@ionic-native/file-path';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -30,7 +32,9 @@ import { HomePage } from '../pages/home/home';
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     Camera,
     FileTransfer,
-    File
+    File,
+    Transfer,
+    FilePath
   ]
 })
 export class AppModule {}

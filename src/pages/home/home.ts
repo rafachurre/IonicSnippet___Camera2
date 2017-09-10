@@ -3,9 +3,9 @@ import { NavController, Platform } from 'ionic-angular';
 import { Http, Headers } from '@angular/http';
 import { File } from '@ionic-native/file';
 import { FileUploadOptions, FileTransfer } from '@ionic-native/file-transfer';
-import {Transfer, TransferObject} from '@ionic-native/transfer';
 
 import { Camera, CameraOptions } from '@ionic-native/camera';
+import { FilePath } from '@ionic-native/file-path';
 
 @Component({
   selector: 'page-home',
@@ -23,25 +23,25 @@ export class HomePage {
   public fileUri: string;
   public fileName: any;
 
-  public apiEndPoint: string = "http://18.194.74.248:5000/upload_file";
+  public apiEndPoint: string = "http://18.194.74.248:3000/api/ocr";
   public bDisableButton: boolean = true;
   public isPlatform: String;
 
   public options: CameraOptions;
   
 
-  constructor(public navCtrl: NavController, public platform: Platform, public camera: Camera, public ft: FileTransfer, public file: File) {
+  constructor(public navCtrl: NavController, public platform: Platform, public camera: Camera, public ft: FileTransfer, public file: File, public fp: FilePath) {
     let that = this;
     this.options= {
       sourceType: this.camera.PictureSourceType.CAMERA,
-      allowEdit: false,
-      encodingType: this.camera.EncodingType.JPEG,
-      targetWidth: 300,
-      targetHeight: 300,
-      mediaType: this.camera.MediaType.PICTURE,
-      correctOrientation: true,
-      saveToPhotoAlbum: false,
-      cameraDirection: this.camera.Direction.BACK
+      //allowEdit: false,
+      //encodingType: this.camera.EncodingType.JPEG,
+      //targetWidth: 300,
+      //targetHeight: 300,
+      //mediaType: this.camera.MediaType.PICTURE,
+      //correctOrientation: true,
+      //saveToPhotoAlbum: false,
+      //cameraDirection: this.camera.Direction.BACK
     };
     
     platform.ready().then(function(){
@@ -49,8 +49,10 @@ export class HomePage {
         that.options.destinationType= that.camera.DestinationType.FILE_URI;
         that.isPlatform = "ios";
       }
+      
       else if(platform.is("android")){
-        that.options.destinationType= that.camera.DestinationType.DATA_URL;
+        that.options.destinationType= that.camera.DestinationType.FILE_URI;
+        that.options.allowEdit=true,
         that.isPlatform = "android";
       }
       else {
@@ -83,10 +85,15 @@ export class HomePage {
 
     this.camera.getPicture(this.options).then((data: string) => {
       if (that.isPlatform === "android"){
-        that.base64Image = "data:image/jpeg;base64," + data;
-        that.imageSrc = that.base64Image;
+        //that.fp.resolveNativePath(data)
+        //.then(resolvedFilePath => {
+          that.imageSrc=data
+          //that.successText = "FilePath: " + resolvedFilePath;
+        //})
+        //.catch(err => that.errorText="File Path: " + err);
       }
       else {
+        
         that.filePath = data;
         that.fileName = data.split("/").pop();
         that.fileUri = data.slice(0,(data.length - that.fileName.length));
@@ -143,7 +150,7 @@ export class HomePage {
     const fileTransfer = this.ft.create();
 
     try{
-    fileTransfer.upload(this.imageSrc, this.apiEndPoint, options)
+    fileTransfer.upload(this.imageSrc, this.apiEndPoint)
       .then((data) => {
         that.successText = JSON.stringify(data);
         that.bDisableButton=false;
